@@ -9,10 +9,10 @@ export default function ClientDirectory({ pujas }) {
   const [selectedClientName, setSelectedClientName] = useState(null);
   const [viewingPuja, setViewingPuja] = useState(null);
 
-  // Group Pujas by Client Name
+  // Group Pujas by Yajman Name
   const clientMap = {};
   pujas.forEach((puja) => {
-    const name = puja.clientName || 'Unknown Client';
+    const name = puja.clientName || 'Unknown Yajman';
     if (!clientMap[name]) {
       clientMap[name] = {
         name,
@@ -41,9 +41,9 @@ export default function ClientDirectory({ pujas }) {
               <Users size={24} color="#ffffff" />
             </div>
             <div>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: '800' }}>Client Directory & History</h2>
+              <h2 style={{ fontSize: '1.3rem', fontWeight: '800' }}>Yajman Directory & History</h2>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                Bhavik Maharaj Client Database • View all past Pujas & read-only summaries
+                Bhavik Maharaj Yajman Database • View all past Pujas & read-only summaries
               </p>
             </div>
           </div>
@@ -53,7 +53,7 @@ export default function ClientDirectory({ pujas }) {
             <input
               type="text"
               className="form-input"
-              placeholder="Search client directory..."
+              placeholder="Search Yajman directory..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               style={{ paddingLeft: '38px' }}
@@ -68,7 +68,7 @@ export default function ClientDirectory({ pujas }) {
           {clientList.length === 0 ? (
             <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '40px', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
               <Users size={40} color="var(--text-muted)" style={{ marginBottom: '10px' }} />
-              <p style={{ fontWeight: '600', color: 'var(--text-main)' }}>No Clients Found</p>
+              <p style={{ fontWeight: '600', color: 'var(--text-main)' }}>No Yajmans Found</p>
             </div>
           ) : (
             clientList.map((client) => {
@@ -104,7 +104,7 @@ export default function ClientDirectory({ pujas }) {
                     </div>
 
                     <div style={{ background: '#fff7ed', border: '1px solid #ffedd5', borderRadius: '10px', padding: '10px 14px', marginTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Lifetime Total:</span>
+                      <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', fontWeight: '700', textTransform: 'uppercase' }}>Lifetime Kharch:</span>
                       <span style={{ fontSize: '1.05rem', fontWeight: '800', color: 'var(--primary-orange)' }}>
                         ₹{grandTotalSpent.toLocaleString('en-IN')}
                       </span>
@@ -113,7 +113,7 @@ export default function ClientDirectory({ pujas }) {
 
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--border-color)' }}>
                     <button className="btn-secondary" style={{ fontSize: '0.82rem', padding: '6px 12px' }}>
-                      <span>View Client History</span>
+                      <span>View Yajman History</span>
                       <ChevronRight size={14} />
                     </button>
                   </div>
@@ -133,7 +133,7 @@ export default function ClientDirectory({ pujas }) {
             }}
             style={{ marginBottom: '20px', fontSize: '0.85rem' }}
           >
-            ← Back to All Clients
+            ← Back to All Yajmans
           </button>
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px', marginBottom: '20px', paddingBottom: '16px', borderBottom: '2px solid var(--border-color)' }}>
@@ -180,7 +180,7 @@ export default function ClientDirectory({ pujas }) {
                     </div>
 
                     <div style={{ textAlign: 'right' }}>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', uppercase: true, display: 'block' }}>Total Expenses:</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', display: 'block' }}>Total Kharch:</span>
                       <span style={{ fontSize: '1.15rem', fontWeight: '800', color: 'var(--accent-rose)' }}>₹{total.toLocaleString('en-IN')}</span>
                     </div>
                   </div>

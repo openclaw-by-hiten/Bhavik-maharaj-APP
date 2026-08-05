@@ -16,11 +16,12 @@ export function exportBackupJSON(pujas) {
 export function generateWhatsAppSummary(puja) {
   const totalExpense = puja.expenses.reduce((sum, item) => sum + Number(item.amount || 0), 0);
   const totalBhudevDakshina = puja.bhudevs.reduce((sum, item) => sum + Number(item.amount || 0), 0);
-  const grandTotalSpent = totalExpense + totalBhudevDakshina;
+  const totalKharch = totalExpense + totalBhudevDakshina;
+  const yajmanPaid = Number(puja.prepaidAmount || 0);
   
   let msg = `*🚩 BHAVIK MAHARAJ PUJA EXPENSE SUMMARY 🚩*\n`;
   msg += `------------------------------------\n`;
-  msg += `*Client Name:* ${puja.clientName}\n`;
+  msg += `*Yajman Name:* ${puja.clientName}\n`;
   msg += `*Puja Title:* ${puja.pujaName}\n`;
   msg += `*Date:* ${formatDate(puja.date)}\n`;
   if (puja.referredBy && puja.referredBy !== 'Added by Me (Direct)') {
@@ -28,13 +29,13 @@ export function generateWhatsAppSummary(puja) {
   }
   msg += `------------------------------------\n`;
 
-  if (puja.isPrepaid) {
-    msg += `*Prepaid Advance Received:* ₹${Number(puja.prepaidAmount || 0).toLocaleString('en-IN')}\n`;
+  if (puja.isPrepaid || yajmanPaid > 0) {
+    msg += `*Amount Paid by Yajman:* ₹${yajmanPaid.toLocaleString('en-IN')}\n`;
   } else {
-    msg += `*Prepaid Advance:* None (Direct Payment)\n`;
+    msg += `*Amount Paid by Yajman:* ₹0 (Pending)\n`;
   }
 
-  msg += `\n*📦 EXPENSES LIST:* \n`;
+  msg += `\n*📦 KHARCH LIST:* \n`;
   puja.expenses.forEach((item, idx) => {
     msg += `${idx + 1}. ${item.name} (${item.category}): ₹${Number(item.amount).toLocaleString('en-IN')}\n`;
   });
@@ -47,15 +48,13 @@ export function generateWhatsAppSummary(puja) {
   }
 
   msg += `------------------------------------\n`;
-  msg += `*Total Expenses + Dakshina:* ₹${grandTotalSpent.toLocaleString('en-IN')}\n`;
+  msg += `*Total Kharch:* ₹${totalKharch.toLocaleString('en-IN')}\n`;
 
-  if (puja.isPrepaid) {
-    const diff = Number(puja.prepaidAmount || 0) - grandTotalSpent;
-    if (diff >= 0) {
-      msg += `*✅ Remaining Balance (Refund/Carry forward):* ₹${diff.toLocaleString('en-IN')}\n`;
-    } else {
-      msg += `*⚠️ Additional Balance Due from Client:* ₹${Math.abs(diff).toLocaleString('en-IN')}\n`;
-    }
+  const diff = yajmanPaid - totalKharch;
+  if (diff >= 0) {
+    msg += `*✅ Remaining Dakshina:* ₹${diff.toLocaleString('en-IN')}\n`;
+  } else {
+    msg += `*⚠️ Yajman Baki:* ₹${Math.abs(diff).toLocaleString('en-IN')}\n`;
   }
 
   msg += `\n_Generated via Bhavik Maharaj App (Offline Protected)_`;

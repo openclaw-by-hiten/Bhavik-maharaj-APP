@@ -49,7 +49,7 @@ export default function ReferralLeaderboard({ pujas }) {
           <div>
             <h2 style={{ fontSize: '1.25rem', fontWeight: '800' }}>Customer Referral Analytics</h2>
             <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-              Top referring customers ranked by distinct new client persons brought to Bhavik Maharaj
+              Top referring Yajmans ranked by distinct new persons brought to Bhavik Maharaj
             </p>
           </div>
         </div>
@@ -57,7 +57,7 @@ export default function ReferralLeaderboard({ pujas }) {
         {/* Overview Stat Cards */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', marginBottom: '20px' }}>
           <div style={{ background: 'var(--royal-blue-light)', padding: '12px', borderRadius: '12px', border: '1px solid var(--royal-blue-border)' }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: '700' }}>Referred Persons</span>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: '700' }}>Referred Yajmans</span>
             <div style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--royal-blue)', marginTop: '2px' }}>{totalUniqueReferredPersons}</div>
           </div>
           <div style={{ background: 'rgba(245, 158, 11, 0.12)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(245, 158, 11, 0.3)' }}>
@@ -79,9 +79,9 @@ export default function ReferralLeaderboard({ pujas }) {
         {leaderboard.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '30px 16px', background: 'var(--bg-card-hover)', borderRadius: '14px', border: '1px dashed var(--border-color)' }}>
             <Gift size={36} color="var(--text-muted)" style={{ marginBottom: '10px' }} />
-            <p style={{ fontSize: '0.95rem', color: 'var(--text-main)', fontWeight: '700' }}>No Referred Customers Logged Yet</p>
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-main)', fontWeight: '700' }}>No Referred Yajmans Logged Yet</p>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-              When creating a new Puja, select an existing customer in the "Referred By" dropdown to build referral rankings!
+              When creating a new Puja, select an existing Yajman in the "Referred By" dropdown to build referral rankings!
             </p>
           </div>
         ) : (
@@ -129,7 +129,7 @@ export default function ReferralLeaderboard({ pujas }) {
                 {/* Sub-list of distinct referred clients */}
                 <div style={{ background: 'var(--bg-card-hover)', padding: '12px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
                   <span style={{ fontSize: '0.72rem', fontWeight: '700', color: 'var(--royal-blue)', textTransform: 'uppercase', display: 'block', marginBottom: '8px' }}>
-                    Referred Clients List ({item.uniquePersonsCount} Distinct Persons):
+                    Referred Yajmans List ({item.uniquePersonsCount} Distinct Persons):
                   </span>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                     {item.clientNames.map((clientName) => {

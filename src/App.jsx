@@ -103,7 +103,7 @@ export default function App() {
                 <input
                   type="text"
                   className="search-input-field"
-                  placeholder="Search client, Puja title, date, or referrer..."
+                  placeholder="Search Yajman, Puja title, date, or referrer..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -115,8 +115,8 @@ export default function App() {
                 onChange={(e) => setFilterType(e.target.value)}
               >
                 <option value="all">All Pujas</option>
-                <option value="prepaid">Prepaid Advance</option>
-                <option value="direct">Direct Expenses</option>
+                <option value="prepaid">Paid Amount</option>
+                <option value="direct">Direct Kharch</option>
               </select>
             </div>
 
@@ -252,7 +252,7 @@ export default function App() {
           onClick={() => setActiveTab('clients')}
         >
           <Users size={20} />
-          <span>Clients</span>
+          <span>Yajmans</span>
         </button>
 
         <button

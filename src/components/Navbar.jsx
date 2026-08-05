@@ -28,7 +28,7 @@ export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme, on
           onClick={() => setActiveTab('clients')}
         >
           <Users size={18} />
-          <span>Clients Directory</span>
+          <span>Yajman Directory</span>
         </button>
         <button
           className={`nav-btn ${activeTab === 'add-puja' ? 'active' : ''}`}

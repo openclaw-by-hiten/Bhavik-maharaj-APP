@@ -41,33 +41,33 @@ export default function SummaryPieChart({ puja }) {
 
       {/* Metric Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '24px' }}>
-        {puja.isPrepaid && (
+        {(puja.isPrepaid || prepaid > 0) && (
           <div style={{ background: 'rgba(245, 158, 11, 0.1)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(245, 158, 11, 0.25)' }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', uppercase: true }}>Prepaid Advance</span>
-            <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#fbbf24', marginTop: '2px' }}>
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: '700' }}>Paid by Yajman</span>
+            <div style={{ fontSize: '1.2rem', fontWeight: '800', color: '#fbbf24', marginTop: '2px' }}>
               ₹{prepaid.toLocaleString('en-IN')}
             </div>
           </div>
         )}
 
         <div style={{ background: 'rgba(244, 63, 94, 0.1)', padding: '12px', borderRadius: '12px', border: '1px solid rgba(244, 63, 94, 0.25)' }}>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Total Expenses</span>
-          <div style={{ fontSize: '1.2rem', fontWeight: '700', color: '#f43f5e', marginTop: '2px' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: '700' }}>Total Kharch</span>
+          <div style={{ fontSize: '1.2rem', fontWeight: '800', color: '#f43f5e', marginTop: '2px' }}>
             ₹{grandTotalSpent.toLocaleString('en-IN')}
           </div>
         </div>
 
-        {puja.isPrepaid && (
+        {(puja.isPrepaid || prepaid > 0) && (
           <div style={{
             background: balance >= 0 ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
             padding: '12px',
             borderRadius: '12px',
             border: balance >= 0 ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)'
           }}>
-            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-              {balance >= 0 ? 'Remaining Cash Left' : 'Client Due Amount'}
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: '700' }}>
+              {balance >= 0 ? 'Remaining Dakshina' : 'Yajman Baki'}
             </span>
-            <div style={{ fontSize: '1.2rem', fontWeight: '700', color: balance >= 0 ? '#34d399' : '#f87171', marginTop: '2px' }}>
+            <div style={{ fontSize: '1.2rem', fontWeight: '800', color: balance >= 0 ? '#34d399' : '#f87171', marginTop: '2px' }}>
               ₹{Math.abs(balance).toLocaleString('en-IN')}
             </div>
           </div>

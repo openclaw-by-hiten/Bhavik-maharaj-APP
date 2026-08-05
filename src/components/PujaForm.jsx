@@ -20,7 +20,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
   const [pujaName, setPujaName] = useState(initialData?.pujaName || '');
   const [date, setDate] = useState(initialData?.date || new Date().toISOString().slice(0, 10));
   const [referredBy, setReferredBy] = useState(initialData?.referredBy || 'Added by Me (Direct)');
-  const [isPrepaid, setIsPrepaid] = useState(initialData?.isPrepaid || false);
+  const [isPrepaid, setIsPrepaid] = useState(initialData?.isPrepaid || initialData?.prepaidAmount > 0 || false);
   const [prepaidAmount, setPrepaidAmount] = useState(initialData?.prepaidAmount || '');
 
   const [expenses, setExpenses] = useState(initialData?.expenses || []);
@@ -84,7 +84,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!clientName || !pujaName || !date) {
-      alert('Please fill in Client Name, Puja Name, and Date.');
+      alert('Please fill in Yajman Name, Puja Name, and Date.');
       return;
     }
 
@@ -108,7 +108,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
     onSave(payload);
   };
 
-  // Filter unique client names for 'Referred By' dropdown
+  // Filter unique Yajman names for 'Referred By' dropdown
   const referrerOptions = Array.from(new Set(existingClients.filter(c => c !== clientName)));
 
   return (
@@ -121,7 +121,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
               {initialData ? 'Edit Puja Record' : 'Create New Puja Booking'}
             </h2>
             <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-              Fill client info, prepaid advance, expenses & Bhudev Dakshina
+              Fill Yajman info, payment received, Kharch & Bhudev Dakshina
             </p>
           </div>
           <button className="icon-circle-btn" onClick={onClose}>
@@ -136,14 +136,14 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
             className={`modal-subtab-btn ${activeSubTab === 'details' ? 'active' : ''}`}
             onClick={() => setActiveSubTab('details')}
           >
-            1. Details
+            1. Yajman Details
           </button>
           <button
             type="button"
             className={`modal-subtab-btn ${activeSubTab === 'expenses' ? 'active' : ''}`}
             onClick={() => setActiveSubTab('expenses')}
           >
-            2. Expenses ({expenses.length + bhudevs.length})
+            2. Kharch & Bhudevs ({expenses.length + bhudevs.length})
           </button>
           {initialData && (
             <button
@@ -151,7 +151,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
               className={`modal-subtab-btn ${activeSubTab === 'summary' ? 'active' : ''}`}
               onClick={() => setActiveSubTab('summary')}
             >
-              3. Summary
+              3. Financial Summary
             </button>
           )}
         </div>
@@ -164,7 +164,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                 <div className="form-group" style={{ background: '#fff7ed', padding: '10px 12px', borderRadius: '12px', border: '1px solid #ffedd5' }}>
                   <label className="form-label" style={{ color: 'var(--primary-orange)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Users size={15} />
-                    <span>Select Pre-registered Customer (Optional)</span>
+                    <span>Select Pre-registered Yajman (Optional)</span>
                   </label>
                   <select
                     className="form-select"
@@ -172,7 +172,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                     onChange={(e) => handleSelectExistingClient(e.target.value)}
                     style={{ borderColor: 'var(--primary-orange)' }}
                   >
-                    <option value="">-- Choose Existing Client (or Type New Name Below) --</option>
+                    <option value="">-- Choose Existing Yajman (or Type New Name Below) --</option>
                     {existingClientsData.map((c) => (
                       <option key={c.name} value={c.name}>
                         👤 {c.name} {c.phone ? `(${c.phone})` : ''}
@@ -180,7 +180,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                     ))}
                   </select>
 
-                  {/* Quick Pills for existing clients */}
+                  {/* Quick Pills for existing Yajmans */}
                   <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '8px' }}>
                     <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', fontWeight: '700', alignSelf: 'center' }}>Quick Select:</span>
                     {existingClientsData.map((c) => (
@@ -206,14 +206,14 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                 </div>
               )}
 
-              {/* Client Info Inputs */}
+              {/* Yajman Info Inputs */}
               <div className="form-row">
                 <div className="form-group">
-                  <label className="form-label">Client Name *</label>
+                  <label className="form-label">Yajman Name *</label>
                   <input
                     type="text"
                     className="form-input"
-                    placeholder="Type new name or select above..."
+                    placeholder="Type Yajman name or select above..."
                     value={clientName}
                     onChange={(e) => {
                       setClientName(e.target.value);
@@ -224,7 +224,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Client Phone / Contact (Optional)</label>
+                  <label className="form-label">Yajman Phone / Contact (Optional)</label>
                   <input
                     type="tel"
                     className="form-input"
@@ -239,7 +239,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
               <div className="form-group">
                 <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <UserCheck size={15} color="var(--royal-blue)" />
-                  <span>Referred By (Reference Customer)</span>
+                  <span>Referred By (Reference Person)</span>
                 </label>
                 <select
                   className="form-select"
@@ -254,7 +254,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                   ))}
                 </select>
                 <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', display: 'block', marginTop: '3px' }}>
-                  Choose a pre-registered customer if this client was referred by them.
+                  Choose a pre-registered Yajman if this person was referred by them.
                 </span>
               </div>
 
@@ -352,7 +352,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                 </div>
               </div>
 
-              {/* Date & Prepaid Toggle */}
+              {/* Date & Payment Received Toggle */}
               <div className="form-row">
                 <div className="form-group">
                   <label className="form-label">Date Held *</label>
@@ -366,7 +366,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Prepaid Advance Option</label>
+                  <label className="form-label">Amount Paid by Yajman Option</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', height: '42px', background: 'var(--bg-card-hover)', padding: '0 12px', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                     <input
                       type="checkbox"
@@ -376,20 +376,20 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                       style={{ width: '18px', height: '18px', accentColor: 'var(--primary-orange)', cursor: 'pointer' }}
                     />
                     <label htmlFor="prepaid-toggle" style={{ fontSize: '0.85rem', cursor: 'pointer', fontWeight: '600' }}>
-                      Client Prepaid Advance Amount?
+                      Add Amount Paid by Yajman?
                     </label>
                   </div>
                 </div>
               </div>
 
-              {/* Prepaid Amount Input */}
+              {/* Amount Paid by Yajman Input */}
               {isPrepaid && (
                 <div className="form-group animate-fade-in">
-                  <label className="form-label" style={{ color: 'var(--accent-emerald)' }}>Prepaid Advance Amount Received (₹)</label>
+                  <label className="form-label" style={{ color: 'var(--accent-emerald)' }}>Amount Paid by Yajman (₹)</label>
                   <input
                     type="number"
                     className="form-input"
-                    placeholder="e.g. 10000"
+                    placeholder="e.g. 12000"
                     value={prepaidAmount}
                     onChange={(e) => setPrepaidAmount(e.target.value)}
                     style={{ borderColor: 'var(--accent-emerald)' }}
