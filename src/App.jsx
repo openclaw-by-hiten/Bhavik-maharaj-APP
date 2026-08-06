@@ -4,10 +4,11 @@ import PujaCard from './components/PujaCard';
 import PujaForm from './components/PujaForm';
 import SummaryPieChart from './components/SummaryPieChart';
 import ClientDirectory from './components/ClientDirectory';
+import BhudevDirectory from './components/BhudevDirectory';
 import PujaCalendar from './components/PujaCalendar';
 import ExportModal from './components/ExportModal';
 import { getAllPujas, savePuja, deletePuja, requestPersistentStorage } from './services/storageService';
-import { Search, Plus, Calendar, HardDrive, List, Users } from 'lucide-react';
+import { Search, Plus, Calendar, HardDrive, List, Users, UserCheck } from 'lucide-react';
 
 export default function App() {
   const [pujas, setPujas] = useState([]);
@@ -55,6 +56,22 @@ export default function App() {
     await loadData();
   };
 
+  const handleToggleBhudevPaidForPuja = async (pujaId, bhudevIdOrName) => {
+    const targetPuja = pujas.find(p => p.id === pujaId);
+    if (!targetPuja) return;
+
+    const updatedBhudevs = (targetPuja.bhudevs || []).map(b => {
+      if (b.id === bhudevIdOrName || b.name === bhudevIdOrName) {
+        return { ...b, isPaid: !b.isPaid };
+      }
+      return b;
+    });
+
+    const updatedPuja = { ...targetPuja, bhudevs: updatedBhudevs };
+    await savePuja(updatedPuja);
+    await loadData();
+  };
+
   // Get distinct Yajman names and full data for autocomplete
   const existingClientNames = Array.from(
     new Set(pujas.map((p) => p.clientName).filter(Boolean))
@@ -72,6 +89,11 @@ export default function App() {
       return acc;
     }, {})
   ).filter(c => Boolean(c.name));
+
+  // Get distinct Bhudev names for quick selection
+  const existingBhudevNames = Array.from(
+    new Set(pujas.flatMap(p => (p.bhudevs || []).map(b => (b.name || '').trim())).filter(Boolean))
+  );
 
   // Filtered pujas for search on home page
   const filteredPujas = pujas.filter((p) => {
@@ -162,7 +184,22 @@ export default function App() {
 
       {/* Clients Directory View (With embedded Referral Rankings) */}
       {activeTab === 'clients' && (
-        <ClientDirectory pujas={pujas} />
+        <ClientDirectory
+          pujas={pujas}
+          onEditPuja={(p) => {
+            setEditingPuja(p);
+            setActiveTab('add-puja');
+          }}
+        />
+      )}
+
+      {/* Bhudev (Pandit) Directory View */}
+      {activeTab === 'bhudevs' && (
+        <BhudevDirectory
+          pujas={pujas}
+          onSelectPuja={(p) => setSelectedPuja(p)}
+          onToggleBhudevPaidForPuja={handleToggleBhudevPaidForPuja}
+        />
       )}
 
       {/* Create / Edit Puja View */}
@@ -171,6 +208,7 @@ export default function App() {
           initialData={editingPuja}
           existingClients={existingClientNames}
           existingClientsData={existingClientsData}
+          existingBhudevs={existingBhudevNames}
           onSave={handleSavePuja}
           onClose={() => setActiveTab('pujas')}
         />
@@ -256,6 +294,14 @@ export default function App() {
         </button>
 
         <button
+          className={`mobile-nav-item ${activeTab === 'bhudevs' ? 'active' : ''}`}
+          onClick={() => setActiveTab('bhudevs')}
+        >
+          <UserCheck size={20} />
+          <span>Bhudevs</span>
+        </button>
+
+        <button
           className={`mobile-nav-item ${activeTab === 'add-puja' ? 'active' : ''}`}
           onClick={() => {
             setEditingPuja(null);
@@ -272,14 +318,6 @@ export default function App() {
         >
           <Calendar size={20} />
           <span>Calendar</span>
-        </button>
-
-        <button
-          className="mobile-nav-item"
-          onClick={() => setShowBackupModal(true)}
-        >
-          <HardDrive size={20} />
-          <span>Backup</span>
         </button>
       </nav>
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flame, List, PlusCircle, Users, HardDrive, Sun, Moon, ShieldCheck, Calendar as CalendarIcon } from 'lucide-react';
+import { Flame, List, PlusCircle, Users, UserCheck, HardDrive, Sun, Moon, ShieldCheck, Calendar as CalendarIcon } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme, onOpenBackup }) {
   return (
@@ -31,6 +31,13 @@ export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme, on
         >
           <Users size={18} />
           <span>Yajman Directory</span>
+        </button>
+        <button
+          className={`nav-btn ${activeTab === 'bhudevs' ? 'active' : ''}`}
+          onClick={() => setActiveTab('bhudevs')}
+        >
+          <UserCheck size={18} />
+          <span>Bhudev Directory</span>
         </button>
         <button
           className={`nav-btn ${activeTab === 'add-puja' ? 'active' : ''}`}

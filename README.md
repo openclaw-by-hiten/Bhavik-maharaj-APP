@@ -8,6 +8,18 @@ A modern, high-performance, offline-first Web Application custom-designed for **
 
 - 🎨 **Auspicious Spiritual Design System**: Built using a curated, vibrant palette of Saffron Bhagwa Orange (`#ea580c`), Sacred Haldi Gold (`#ca8a04`), Royal Blue (`#1e40af`), and crisp white card containers with smooth glassmorphic dark mode support.
 - 🌸 **Sacred Pothi & Morpankh Logo**: High-definition transparent circular emblem featuring the Sacred Pothi (book), Garland, and Peacock Feather (`/bhavik-logo.png`).
+- 🕉️ **Centralized Bhudev (Pandit) Directory (`BhudevDirectory.jsx`)**:
+  - **Auto-Population**: Pandits added when booking or editing a Puja are automatically registered into the directory.
+  - **Smart Logic Matrix**:
+    - 🟠 **`Pending Handover Due`**: Maharaj paid the Pandit out of his own pocket (`isPaid: true`), but the Yajman has NOT paid Maharaj yet.
+    - 🔴 **`Pending Bhudev Payment (Pandit Unpaid)`**: Maharaj has NOT paid the Pandit yet (`isPaid: false`).
+    - 🟢 **`Paid & Settled`**: Both the Yajman paid Maharaj AND Maharaj paid the Pandit.
+  - **Interactive 1-Click Checkbox**: Tap **`[✓] Paid to Pandit (Settled)`** directly inside any Pandit's history timeline row to update payment status on the spot!
+  - **In-Card Inline History Expansion**: Card expands smoothly right in place under your finger showing full timeline history and financial breakdowns.
+- 👥 **Yajman Directory & Itemized Dues Accounting**:
+  - Calculates Baki and Earned Dakshina 100% individually per Puja.
+  - **Direct Edit Integration**: Each Puja card in a Yajman's history features an **`✏️ Edit Puja / Add Expenses`** button for instant edits.
+  - Embedded **Referral Analytics** subtab ranking clients based on distinct new persons referred.
 - 📅 **Interactive Puja Calendar System**:
   - **Month & Year Selectors**: Includes custom 10-item height scrollable Year Picker (`1900` to `2100`) and Month Picker.
   - **Golden Dots (`🟡`)**: Visually indicates scheduled Pujas on date cells (multiple golden dots for multiple Pujas on the same day).
@@ -18,11 +30,9 @@ A modern, high-performance, offline-first Web Application custom-designed for **
 - 🏷️ **Automatic Status Badges**:
   - 🟢 **`✓ Completed`**: Automatically badges past Pujas where the date has passed.
   - 🔵 **`⏳ Upcoming`**: Automatically badges future scheduled Pujas.
-- 👥 **Yajman Directory & Itemized Dues Accounting**:
-  - Calculates Baki and Earned Dakshina 100% individually per Puja (preventing profit from one Puja from offsetting unpaid debt of another Puja).
-  - Itemized per-Puja breakdowns for **Bhudev Kharch**, **Yajman Baki (Due Amount)**, and **Total Earned Dakshina**.
-  - Embedded **Referral Analytics** subtab ranking clients based on distinct new persons referred.
-- 🕉️ **Bhudev (Pandit) Dakshina Manager**: Auto-calculates Bhudev count (`Auto +1` per Pandit added) and tracks individual Dakshina amounts alongside Samagri expenses.
+- 📦 **Smart Expense Item Entry (`ExpenseItem.jsx`)**:
+  - **Auto-Default Name**: Leaving the item name blank auto-uses the selected category name (e.g. `Pooja Samagri: ₹4,500`).
+  - 🎤 **Custom Item & Toggle Deselect**: Includes a `Custom Item` category pill with Mic icon and click-again toggle deselect feature.
 - 📅 **Universal `DD-MM-YYYY` Date Standard**: Enforced strictly across all views, modals, pickers, WhatsApp summaries, and backup files.
 - 🔒 **Offline-First & Persistent Data**: Powered by IndexedDB with `navigator.storage.persist()` protection. Works 100% offline.
 - 📲 **One-Click WhatsApp & Backup Export**: Instantly export a formatted Puja expense summary directly to WhatsApp or download full JSON backup files.
@@ -38,13 +48,14 @@ puja-expense-manager/
 ├── src/
 │   ├── components/
 │   │   ├── Navbar.jsx               # Header branding, theme toggle & backup launcher
+│   │   ├── BhudevDirectory.jsx      # Centralized Bhudev Directory with 1-click checkbox & inline expansion
+│   │   ├── ClientDirectory.jsx      # Yajman Directory, itemized dues accounting & Referral Analytics
 │   │   ├── PujaCalendar.jsx         # Interactive monthly calendar with dynamic analytics & popup modal
 │   │   ├── PujaCard.jsx             # Puja card with automatic Completed/Upcoming badges
 │   │   ├── PujaForm.jsx             # Puja booking form with dynamic tag manager & DD-MM-YYYY date picker
-│   │   ├── ExpenseItem.jsx          # Samagri & Misc expense logger (Pooja Samagri, Bhudev Dakshina, Misc)
-│   │   ├── BhudevList.jsx           # Auto-calculated Bhudev/Pandit Dakshina manager
+│   │   ├── ExpenseItem.jsx          # Samagri & Misc expense logger (auto-name, Mic category & deselect)
+│   │   ├── BhudevList.jsx           # Bhudev/Pandit manager with Paid to Pandit checkbox control
 │   │   ├── SummaryPieChart.jsx      # Recharts expense visual breakdown & Bhudev list
-│   │   ├── ClientDirectory.jsx      # Yajman Directory, itemized dues accounting & Referral Analytics
 │   │   ├── ReferralLeaderboard.jsx  # Distinct person referral ranking leaderboard
 │   │   └── ExportModal.jsx          # JSON backup export and restore tool
 │   ├── services/

@@ -15,7 +15,7 @@ const DEFAULT_PUJA_TAGS = [
   'Lakshmi Pujan'
 ];
 
-export default function PujaForm({ initialData, existingClients = [], existingClientsData = [], onSave, onClose }) {
+export default function PujaForm({ initialData, existingClients = [], existingClientsData = [], existingBhudevs = [], onSave, onClose }) {
   const [clientName, setClientName] = useState(initialData?.clientName || '');
   const [clientPhone, setClientPhone] = useState(initialData?.clientPhone || '');
   const [pujaName, setPujaName] = useState(initialData?.pujaName || '');
@@ -50,6 +50,10 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
 
   const handleDeleteBhudev = (bId) => {
     setBhudevs(bhudevs.filter(b => b.id !== bId));
+  };
+
+  const handleToggleBhudevPaid = (bId) => {
+    setBhudevs(bhudevs.map(b => b.id === bId ? { ...b, isPaid: !b.isPaid } : b));
   };
 
   const handleSelectExistingClient = (name) => {
@@ -413,8 +417,10 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
               />
               <BhudevList
                 bhudevs={bhudevs}
+                existingBhudevs={existingBhudevs}
                 onAddBhudev={handleAddBhudev}
                 onDeleteBhudev={handleDeleteBhudev}
+                onToggleBhudevPaid={handleToggleBhudevPaid}
               />
             </div>
           )}

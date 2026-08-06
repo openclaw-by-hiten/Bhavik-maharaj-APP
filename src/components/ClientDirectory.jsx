@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Users, Phone, Calendar, ChevronRight, Lock, Eye, Share2, Wallet, Search, Sparkles, Award } from 'lucide-react';
+import { Users, Phone, Calendar, ChevronRight, Lock, Eye, Share2, Wallet, Search, Sparkles, Award, Edit } from 'lucide-react';
 import SummaryPieChart from './SummaryPieChart';
 import ReferralLeaderboard from './ReferralLeaderboard';
 import { generateWhatsAppSummary } from '../services/exportService';
 import { formatDate } from '../utils/formatters';
 
-export default function ClientDirectory({ pujas }) {
+export default function ClientDirectory({ pujas, onEditPuja }) {
   const [subTab, setSubTab] = useState('directory'); // 'directory' | 'referrals'
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
@@ -373,19 +373,27 @@ export default function ClientDirectory({ pujas }) {
                       {/* Read-Only Summary & Pie Chart Accordion */}
                       <SummaryPieChart puja={puja} />
 
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid rgba(0,0,0,0.06)', flexWrap: 'wrap', gap: '8px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                          <Lock size={13} color="#94a3b8" />
-                          <span>Read-only locked</span>
-                        </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px', paddingTop: '12px', borderTop: '1px solid var(--border-color)', flexWrap: 'wrap', gap: '8px' }}>
+                        {onEditPuja && (
+                          <button
+                            type="button"
+                            className="btn-primary"
+                            style={{ fontSize: '0.82rem', padding: '6px 14px' }}
+                            onClick={() => onEditPuja(puja)}
+                          >
+                            <Edit size={15} />
+                            <span>Edit Puja / Add Expenses</span>
+                          </button>
+                        )}
 
                         <button
+                          type="button"
                           className="btn-secondary"
+                          style={{ fontSize: '0.78rem', padding: '6px 12px' }}
                           onClick={() => {
                             const url = generateWhatsAppSummary(puja);
                             window.open(url, '_blank');
                           }}
-                          style={{ fontSize: '0.78rem', padding: '5px 10px' }}
                         >
                           <Share2 size={14} color="#25D366" />
                           <span>Share WhatsApp</span>
