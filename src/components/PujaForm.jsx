@@ -3,6 +3,7 @@ import { X, Save, Plus, Sparkles, UserCheck, Calendar, Wallet, Users, UserPlus }
 import ExpenseItem from './ExpenseItem';
 import BhudevList from './BhudevList';
 import SummaryPieChart from './SummaryPieChart';
+import { formatDate } from '../utils/formatters';
 
 const DEFAULT_PUJA_TAGS = [
   'Satyanarayan Vrat Katha',
@@ -355,7 +356,7 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
               {/* Date & Payment Received Toggle */}
               <div className="form-row">
                 <div className="form-group">
-                  <label className="form-label">Date Held *</label>
+                  <label className="form-label">Date Held (DD-MM-YYYY) *</label>
                   <input
                     type="date"
                     className="form-input"
@@ -363,6 +364,9 @@ export default function PujaForm({ initialData, existingClients = [], existingCl
                     onChange={(e) => setDate(e.target.value)}
                     required
                   />
+                  <span style={{ fontSize: '0.75rem', color: 'var(--primary-orange)', fontWeight: '700', marginTop: '4px', display: 'block' }}>
+                    📅 Date Format: {formatDate(date)}
+                  </span>
                 </div>
 
                 <div className="form-group">

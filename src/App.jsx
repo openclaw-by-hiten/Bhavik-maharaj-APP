@@ -3,27 +3,26 @@ import Navbar from './components/Navbar';
 import PujaCard from './components/PujaCard';
 import PujaForm from './components/PujaForm';
 import SummaryPieChart from './components/SummaryPieChart';
-import ReferralLeaderboard from './components/ReferralLeaderboard';
 import ClientDirectory from './components/ClientDirectory';
+import PujaCalendar from './components/PujaCalendar';
 import ExportModal from './components/ExportModal';
 import { getAllPujas, savePuja, deletePuja, requestPersistentStorage } from './services/storageService';
-import { Search, Plus, Filter, Flame, Users, Calendar, Sparkles, HardDrive, List, UserCheck } from 'lucide-react';
+import { Search, Plus, Calendar, HardDrive, List, Users } from 'lucide-react';
 
 export default function App() {
   const [pujas, setPujas] = useState([]);
-  const [activeTab, setActiveTab] = useState('pujas'); // 'pujas', 'clients', 'add-puja', 'referrals'
+  const [activeTab, setActiveTab] = useState('pujas'); // 'pujas', 'clients', 'add-puja', 'calendar'
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('bhavik_maharaj_theme') || 'light';
   });
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState('all'); // 'all', 'prepaid', 'direct'
 
   const [selectedPuja, setSelectedPuja] = useState(null);
   const [editingPuja, setEditingPuja] = useState(null);
   const [showBackupModal, setShowBackupModal] = useState(false);
 
   useEffect(() => {
-    // Request persistent storage on mount to shield data from app cleaners
+    // Shield data from aggressive browser storage clearers
     requestPersistentStorage();
     loadData();
 
@@ -38,44 +37,51 @@ export default function App() {
   };
 
   const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    localStorage.setItem('bhavik_maharaj_theme', next);
-    document.documentElement.setAttribute('data-theme', next);
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem('bhavik_maharaj_theme', nextTheme);
+    document.documentElement.setAttribute('data-theme', nextTheme);
   };
 
   const handleSavePuja = async (pujaData) => {
     await savePuja(pujaData);
     await loadData();
     setEditingPuja(null);
-    setSelectedPuja(null);
     setActiveTab('pujas');
   };
 
   const handleDeletePuja = async (id) => {
     await deletePuja(id);
-    if (selectedPuja?.id === id) setSelectedPuja(null);
     await loadData();
   };
 
-  // Unique registered client names & full details for selection dropdown
-  const existingClientNames = Array.from(new Set(pujas.map(p => p.clientName).filter(Boolean)));
-  const existingClientsData = Array.from(
-    new Map(pujas.map(p => [p.clientName, { name: p.clientName, phone: p.clientPhone, referredBy: p.referredBy }])).values()
+  // Get distinct Yajman names and full data for autocomplete
+  const existingClientNames = Array.from(
+    new Set(pujas.map((p) => p.clientName).filter(Boolean))
+  );
+
+  const existingClientsData = Object.values(
+    pujas.reduce((acc, p) => {
+      if (p.clientName && !acc[p.clientName]) {
+        acc[p.clientName] = {
+          name: p.clientName,
+          phone: p.clientPhone || '',
+          referredBy: p.referredBy || 'Added by Me (Direct)'
+        };
+      }
+      return acc;
+    }, {})
   ).filter(c => Boolean(c.name));
 
-  // Filtered pujas
+  // Filtered pujas for search on home page
   const filteredPujas = pujas.filter((p) => {
     const query = searchQuery.toLowerCase();
-    const matchesSearch =
+    return (
       p.clientName.toLowerCase().includes(query) ||
       p.pujaName.toLowerCase().includes(query) ||
       p.date.includes(query) ||
-      (p.referredBy && p.referredBy.toLowerCase().includes(query));
-
-    if (filterType === 'prepaid') return matchesSearch && p.isPrepaid;
-    if (filterType === 'direct') return matchesSearch && !p.isPrepaid;
-    return matchesSearch;
+      (p.referredBy && p.referredBy.toLowerCase().includes(query))
+    );
   });
 
   return (
@@ -83,10 +89,7 @@ export default function App() {
       {/* Header & Navbar */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={(tab) => {
-          if (tab === 'add-puja') setEditingPuja(null);
-          setActiveTab(tab);
-        }}
+        setActiveTab={setActiveTab}
         theme={theme}
         toggleTheme={toggleTheme}
         onOpenBackup={() => setShowBackupModal(true)}
@@ -95,29 +98,17 @@ export default function App() {
       {/* Pujas List & Dashboard View */}
       {activeTab === 'pujas' && (
         <main className="animate-fade-in">
-          {/* Controls Bar: Search & Filter */}
+          {/* Controls Bar: Search & Book Button */}
           <div className="controls-container">
-            <div style={{ display: 'flex', gap: '10px', flex: 1, alignItems: 'center', flexWrap: 'wrap' }}>
-              <div className="search-box-wrapper">
-                <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', zIndex: 2 }} />
-                <input
-                  type="text"
-                  className="search-input-field"
-                  placeholder="Search Yajman, Puja title, date, or referrer..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-
-              <select
-                className="filter-select-field"
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
-              >
-                <option value="all">All Pujas</option>
-                <option value="prepaid">Paid Amount</option>
-                <option value="direct">Direct Kharch</option>
-              </select>
+            <div className="search-box-wrapper">
+              <Search size={18} color="var(--text-muted)" style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', zIndex: 2 }} />
+              <input
+                type="text"
+                className="search-input-field"
+                placeholder="Search Yajman, Puja title, date, or referrer..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
 
             <button
@@ -133,13 +124,15 @@ export default function App() {
             </button>
           </div>
 
-          {/* Cards Grid */}
+          {/* Render Cards Grid */}
           {filteredPujas.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '50px 20px', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-color)' }}>
-              <Flame size={48} color="var(--primary-saffron)" style={{ marginBottom: '12px' }} />
+            <div className="empty-state">
+              <div className="empty-icon-box">
+                <Search size={36} color="var(--primary-orange)" />
+              </div>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700', marginBottom: '6px' }}>No Puja Records Found</h3>
               <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
-                {searchQuery ? 'Try clearing your search query' : 'Click below to create your first client Puja booking!'}
+                {searchQuery ? 'Try adjusting your search criteria.' : 'Create your first Puja record to start tracking!'}
               </p>
               <button
                 className="btn-primary"
@@ -167,7 +160,7 @@ export default function App() {
         </main>
       )}
 
-      {/* Clients Directory View */}
+      {/* Clients Directory View (With embedded Referral Rankings) */}
       {activeTab === 'clients' && (
         <ClientDirectory pujas={pujas} />
       )}
@@ -183,9 +176,16 @@ export default function App() {
         />
       )}
 
-      {/* Referral Analytics View */}
-      {activeTab === 'referrals' && (
-        <ReferralLeaderboard pujas={pujas} />
+      {/* Interactive Puja Calendar View */}
+      {activeTab === 'calendar' && (
+        <PujaCalendar
+          pujas={pujas}
+          onSelectPuja={(p) => setSelectedPuja(p)}
+          onBookPujaOnDate={(targetDateIso) => {
+            setEditingPuja({ date: targetDateIso });
+            setActiveTab('add-puja');
+          }}
+        />
       )}
 
       {/* Selected Puja Detail & Summary Modal */}
@@ -194,7 +194,7 @@ export default function App() {
           <div className="modal-content animate-fade-in" onClick={(e) => e.stopPropagation()}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
               <div>
-                <h2 style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--primary-gold)' }}>
+                <h2 style={{ fontSize: '1.3rem', fontWeight: '700', color: 'var(--primary-orange)' }}>
                   {selectedPuja.clientName}
                 </h2>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-main)', fontWeight: '500' }}>
@@ -267,11 +267,11 @@ export default function App() {
         </button>
 
         <button
-          className={`mobile-nav-item ${activeTab === 'referrals' ? 'active' : ''}`}
-          onClick={() => setActiveTab('referrals')}
+          className={`mobile-nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
+          onClick={() => setActiveTab('calendar')}
         >
-          <UserCheck size={20} />
-          <span>Referrals</span>
+          <Calendar size={20} />
+          <span>Calendar</span>
         </button>
 
         <button

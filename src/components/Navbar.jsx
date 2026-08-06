@@ -1,13 +1,15 @@
 import React from 'react';
-import { Flame, List, PlusCircle, Users, HardDrive, Sun, Moon, ShieldCheck, UserCheck } from 'lucide-react';
+import { Flame, List, PlusCircle, Users, HardDrive, Sun, Moon, ShieldCheck, Calendar as CalendarIcon } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme, onOpenBackup }) {
   return (
     <header className="app-header">
       <div className="brand-container" onClick={() => setActiveTab('pujas')} style={{ cursor: 'pointer' }}>
-        <div className="brand-logo">
-          <Flame size={26} color="#ffffff" />
-        </div>
+        <img
+          src="/bhavik-logo.png"
+          alt="Bhavik Maharaj Sacred Logo"
+          className="brand-logo-img"
+        />
         <div>
           <h1 className="brand-title">Bhavik Maharaj</h1>
           <p className="brand-subtitle">Puja Expense & Bhudev Tracker</p>
@@ -38,11 +40,11 @@ export default function Navbar({ activeTab, setActiveTab, theme, toggleTheme, on
           <span>New Puja</span>
         </button>
         <button
-          className={`nav-btn ${activeTab === 'referrals' ? 'active' : ''}`}
-          onClick={() => setActiveTab('referrals')}
+          className={`nav-btn ${activeTab === 'calendar' ? 'active' : ''}`}
+          onClick={() => setActiveTab('calendar')}
         >
-          <UserCheck size={18} />
-          <span>Referral Analytics</span>
+          <CalendarIcon size={18} />
+          <span>Puja Calendar</span>
         </button>
       </nav>
 

@@ -2,20 +2,19 @@ import React, { useState } from 'react';
 import { Fuel, Car, Flame, Flower2, Utensils, Users, Package, Plus, Trash2, Tag } from 'lucide-react';
 
 export const CATEGORIES = [
-  { name: 'Pooja Samagri', icon: Flame, color: '#f59e0b' },
-  { name: 'Flowers', icon: Flower2, color: '#ec4899' },
-  { name: 'Petrol', icon: Fuel, color: '#ef4444' },
-  { name: 'Travel', icon: Car, color: '#3b82f6' },
-  { name: 'Food', icon: Utensils, color: '#10b981' },
-  { name: 'Bhudev Dakshina', icon: Users, color: '#8b5cf6' },
-  { name: 'Misc', icon: Package, color: '#64748b' }
+  { name: 'Pooja Samagri', icon: Flame, color: '#ea580c' },
+  { name: 'Bhudev Dakshina', icon: Users, color: '#1e40af' },
+  { name: 'Misc', icon: Package, color: '#ca8a04' }
 ];
 
 export function getCategoryIcon(catName) {
-  const found = CATEGORIES.find(c => c.name === catName);
-  const IconComp = found ? found.icon : Package;
-  const color = found ? found.color : '#f59e0b';
-  return <IconComp size={18} color={color} />;
+  if (catName === 'Pooja Samagri') return <Flame size={18} color="#ea580c" />;
+  if (catName === 'Bhudev Dakshina') return <Users size={18} color="#1e40af" />;
+  if (catName === 'Flowers') return <Flower2 size={18} color="#ec4899" />;
+  if (catName === 'Petrol') return <Fuel size={18} color="#ef4444" />;
+  if (catName === 'Travel') return <Car size={18} color="#3b82f6" />;
+  if (catName === 'Food') return <Utensils size={18} color="#10b981" />;
+  return <Package size={18} color="#ca8a04" />;
 }
 
 export default function ExpenseItem({ expenses, onAddExpense, onDeleteExpense }) {
@@ -38,7 +37,7 @@ export default function ExpenseItem({ expenses, onAddExpense, onDeleteExpense })
 
   return (
     <div style={{ marginTop: '16px' }}>
-      <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '12px', color: 'var(--primary-gold)' }}>
+      <h4 style={{ fontSize: '1rem', fontWeight: '700', marginBottom: '12px', color: 'var(--primary-orange)' }}>
         📦 Track Expenses & Samagri Items
       </h4>
 
@@ -50,7 +49,7 @@ export default function ExpenseItem({ expenses, onAddExpense, onDeleteExpense })
             <input
               type="text"
               className="form-input"
-              placeholder="e.g. Hawan Samagri, Ghee, Travel Fuel"
+              placeholder="e.g. Hawan Samagri, Ghee, Fruit Prasad"
               value={name}
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSubmit(e); } }}
@@ -85,7 +84,7 @@ export default function ExpenseItem({ expenses, onAddExpense, onDeleteExpense })
                     display: 'flex',
                     alignItems: 'center',
                     gap: '6px',
-                    padding: '6px 12px',
+                    padding: '6px 14px',
                     borderRadius: '20px',
                     border: isSelected ? `1.5px solid ${cat.color}` : '1px solid var(--border-color)',
                     background: isSelected ? `${cat.color}22` : 'var(--bg-card)',
@@ -130,13 +129,13 @@ export default function ExpenseItem({ expenses, onAddExpense, onDeleteExpense })
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <span style={{ fontSize: '0.95rem', fontWeight: '700', color: '#f59e0b' }}>
+                <span style={{ fontSize: '0.95rem', fontWeight: '700', color: 'var(--primary-orange)' }}>
                   ₹{Number(item.amount).toLocaleString('en-IN')}
                 </span>
                 <button
                   type="button"
                   onClick={() => onDeleteExpense(item.id)}
-                  style={{ background: 'none', border: 'none', color: '#f43f5e', cursor: 'pointer', padding: '4px' }}
+                  style={{ background: 'none', border: 'none', color: 'var(--accent-rose)', cursor: 'pointer', padding: '4px' }}
                 >
                   <Trash2 size={16} />
                 </button>
